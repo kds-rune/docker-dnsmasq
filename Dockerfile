@@ -14,8 +14,6 @@ RUN apk --no-cache add \
   && \
     apk del .build-deps
 
-VOLUME /var/lib/misc/dnsmasq.leases
-
 EXPOSE 53 \
        67 \
        69

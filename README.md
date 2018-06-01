@@ -24,21 +24,19 @@ Note:
 
 #### Start docker container ####
 
-Midify as suits your need:
+Modify as suits your need:
 - subnet: 172.16.8.0/22
 - dnsmasq/host-ip: 172.16.10.1
 - dhcp-range: 172.16.10.100 > 172.16.10.200
 - gateway: 172.16.8.100
-- iPXE target file: 172.16.10.1:8080/boot.ipxe
-
 ```
-$ #!/bin/bash
+#!/bin/bash
 sudo docker run -d --rm --cap-add=NET_ADMIN --network="host" runeronneseth/dnsmasq:latest \
   --no-daemon \
   --no-resolv \
   --log-queries \
   --log-dhcp \
-  ---port=5353
+  --port=5353 \
   --enable-tftp \
   --tftp-root=/var/lib/tftpboot \
   --dhcp-range=172.16.10.100,172.16.10.200,10m \
@@ -58,7 +56,25 @@ sudo docker run -d --rm --cap-add=NET_ADMIN --network="host" runeronneseth/dnsma
   --dhcp-match=set:efi64,option:client-arch,9 \
   --dhcp-boot=tag:efi64,ipxe.efi \
   --dhcp-userclass=set:ipxe,iPXE \
-  --dhcp-boot=tag:ipxe,http://172.16.10.1:8080/boot.ipxe
+  --dhcp-boot=tag:ipxe,http://boot.ipxe.org/demo/boot.php
+```
+
+Running as dhcp-proxy (..,proxy,..), without dns (--port=0)
+```
+#!/bin/bash
+docker run -d --rm --cap-add=NET_ADMIN --network="host" runeronneseth/dnsmasq:latest \
+  --port=0 \
+  --no-daemon \
+  --log-dhcp \
+  --log-queries \
+  --enable-tftp \
+  --tftp-root=/var/lib/tftpboot \
+  --dhcp-range=172.16.8.0,proxy,255.255.252.0 \
+  --dhcp-match=set:ipxe,175 \
+  --pxe-service=tag:#ipxe,x86PC,"Chainload ipxe",undionly.kpxe \
+  --pxe-service=tag:#ipxe,BC_EFI,"Chainload ipxe",ipxe.efi \
+  --pxe-service=tag:ipxe,x86PC,"Loading ipxe-menu",http://boot.ipxe.org/demo/boot.php \
+  --pxe-service=tag:ipxe,BC_EFI,"Loading ipxe-menu",http://boot.ipxe.org/demo/boot.php
 ```
 
 ## Disclaimer ##
