@@ -10,9 +10,9 @@ RUN apk --no-cache add \
   && \
     mkdir /var/lib/tftpboot && \
     curl -fsSL -o /var/lib/tftpboot/undionly.kpxe http://boot.ipxe.org/undionly.kpxe && \
-    curl -fsSL -o /var/lib/tftpboot/ipxe.efi http://boot.ipxe.org/ipxe.efi
-  &&
-    apk del build-deps
+    curl -fsSL -o /var/lib/tftpboot/ipxe.efi http://boot.ipxe.org/ipxe.efi \
+  && \
+    apk del .build-deps
 
 VOLUME /var/lib/misc/dnsmasq.leases
 
