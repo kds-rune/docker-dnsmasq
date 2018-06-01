@@ -26,8 +26,9 @@ Note:
 
 Midify as suits your need:
 - subnet: 172.16.8.0/22
-- dnsmasq host-ip: 172.16.10.1
+- dnsmasq/host-ip: 172.16.10.1
 - dhcp-range: 172.16.10.100 > 172.16.10.200
+- gateway: 172.16.8.100
 - iPXE target file: 172.16.10.1:8080/boot.ipxe
 
 ```
